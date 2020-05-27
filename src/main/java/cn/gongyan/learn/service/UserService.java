@@ -64,4 +64,6 @@ public interface UserService {
      * @return
      */
     Integer setUserInfo(String userId, SettingQo settingDTO);
+
+    Integer disableUser(String userId);
 }

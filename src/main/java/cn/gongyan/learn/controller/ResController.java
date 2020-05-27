@@ -38,6 +38,22 @@ public class ResController {
 //    ExamService examService;
 
     /**
+     * 获取资源的url
+     * @param id
+     * @return
+     */
+    @GetMapping("/url/{id}")
+    @ApiOperation("获取资源url")
+    public ResultVO<String> getResUrl(@PathVariable String id) {
+        ResultVO<String> resultVO;
+        try {
+            resultVO = new ResultVO<>(0, "获取url成功", resourceService.getResourceUrl(id));
+        } catch (Exception e) {
+            resultVO = new ResultVO<>(-1, "获取url失败", null);
+        }
+        return resultVO;
+    }
+    /**
      * 获取资源列表（页面）
      * @param pageNo
      * @param pageSize
@@ -137,7 +153,7 @@ public class ResController {
 //        return resultVO;
 //    }
 //
-//
+
 
     /**
      * 添加一个资源

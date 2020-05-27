@@ -1,5 +1,6 @@
 package cn.gongyan.learn.executor;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -27,17 +28,9 @@ public class JavaClassExecutor {
         HotSwapClassLoader classLoader = new HotSwapClassLoader();
         Class clazz = classLoader.loadByte(modifyBytes);
         // 5. 通过反射调用Class对象的main方法
-//        runningCount.incrementAndGet();
         try {
             Method mainMethod = clazz.getMethod("main", new Class[] { String[].class });
             mainMethod.invoke(null, new String[] { null });
-
-            //Method mainMethod = clazz.getMethod("main", new Class[] { String.class,Integer.class });
-//            try {
-//                mainMethod.invoke(clazz.newInstance(),"你好",new Integer(13));
-//            } catch (InstantiationException e) {
-//                e.printStackTrace();
-//            }
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

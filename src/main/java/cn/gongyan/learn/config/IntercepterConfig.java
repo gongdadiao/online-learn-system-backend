@@ -33,7 +33,9 @@ public class IntercepterConfig implements WebMvcConfigurer {
                 addPathPatterns("/classes/**").
                 addPathPatterns("/student/**").
                 addPathPatterns("/mail/**").
-                addPathPatterns("/train/**");
+                addPathPatterns("/train/**").
+                addPathPatterns("/test/**").
+                addPathPatterns("/admin/**");
     }
 
 }

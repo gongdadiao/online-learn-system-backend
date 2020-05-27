@@ -113,10 +113,12 @@ public class ExamServiceImpl implements ExamService {
         BeanUtils.copyProperties(examresult,exam);
         //对学生进行保密
         //exam.setExamAnswersUrl(null);
-        exam.setExamQuestionsUrl(null);
-        examDetailVo.setExam(exam);
         String download = DownLoader.download(record.getExamOptionUrl());
         OneExam oneExam = JSONObject.parseObject(download, OneExam.class);
+        exam.setExamQuestionsUrl(null);
+        exam.setExamScore(oneExam.getExamFinalScore());
+        examDetailVo.setExam(exam);
+
         examDetailVo.setDanxuanList(this.convert(oneExam.getDanxuanList()));
         examDetailVo.setDuoxuanList(this.convert(oneExam.getDuoxuanList()));
         examDetailVo.setPanduanList(this.convert(oneExam.getPanduanList()));
@@ -302,11 +304,13 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public ExamRecord addTestRecord(List<Question> questions, String userId, String testId) {
+        Chapter chapter = chapterRepository.findById(testId).orElse(null);
+
         OneExam oneExam = new OneExam();
         List<OneQuestion> danxuans = new ArrayList<>();
         List<OneQuestion> panduans = new ArrayList<>();
         List<OneQuestion> duoxuans = new ArrayList<>();
-        Resource homework = resourceRepository.findById(testId).orElse(null);
+        Resource homework = resourceRepository.findById(chapter.getChResId()).orElse(null);
         String ids = homework.getResUrl();
         String[] idList = ids.split(",");
         if(idList.length!=questions.size()){
@@ -357,6 +361,9 @@ public class ExamServiceImpl implements ExamService {
 
         String key = UpLoader.uploadQiniuText("result", JSON.toJSONString(oneExam), testId);
         ExamRecord record = new ExamRecord();
+        record.setChapterId(testId);
+        Theme theme = themeRepository.findById(chapter.getChThemeId()).orElse(null);
+        record.setClassId(theme.getThemeClassId());
         record.setExamOptionUrl(key);
         record.setExamStatus("complete");
         record.setExamOrHomework("homework");

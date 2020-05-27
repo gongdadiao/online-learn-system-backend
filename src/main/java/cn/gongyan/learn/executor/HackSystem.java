@@ -2,10 +2,7 @@ package cn.gongyan.learn.executor;
 
 import sun.reflect.CallerSensitive;
 
-import java.io.Console;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.channels.Channel;
 import java.util.Properties;
 
@@ -14,12 +11,19 @@ public final class HackSystem {
     private HackSystem() {
     }
 
-    public final static InputStream in = System.in;
+    public  final static InputStream in = new HackInputStream();
 
     public final static PrintStream out = new HackPrintStream();
 
     public final static PrintStream err = out;
 
+    public static void resetInput(){
+        try {
+            in.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * 获取当前线程的输出流中的内容
      */
@@ -36,8 +40,9 @@ public final class HackSystem {
 
     private static volatile SecurityManager security = null;
 
-    public static void setIn(InputStream in) {
-        throw new SecurityException("Use hazardous method: System.setIn().");
+    public static void setIn(InputStream input) {
+
+        //throw new SecurityException("Use hazardous method: System.setIn().");
     }
 
     public static void setOut(PrintStream out) {

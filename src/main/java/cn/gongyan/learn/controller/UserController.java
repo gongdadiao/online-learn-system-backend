@@ -32,6 +32,23 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/remove/{id}")
+    @ApiOperation("提交用户信息设置")
+    ResultVO<String> remove(@PathVariable("id") String id, HttpServletRequest request){
+        String userId = (String) request.getAttribute("user_id");
+        ResultVO<String> resultVO;
+        try {
+            Integer result = userService.disableUser(id);
+            if(result==0)
+                throw new Exception("没有该用户");
+            resultVO=new ResultVO<>(0,"删除成功",null);
+        }catch (Exception e){
+            e.printStackTrace();
+            resultVO=new ResultVO<>(-1,"删除失败",null);
+        }
+        return resultVO;
+    }
+
     @PostMapping("/settings")
     @ApiOperation("提交用户信息设置")
     ResultVO<String> settings(@RequestBody SettingQo settingDTO, HttpServletRequest request){

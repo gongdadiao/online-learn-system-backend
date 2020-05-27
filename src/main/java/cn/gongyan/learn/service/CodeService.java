@@ -7,13 +7,16 @@
 package cn.gongyan.learn.service;
 
 import cn.gongyan.learn.compiler.CustomStringJavaCompiler;
+import cn.gongyan.learn.executor.HackSystem;
 import cn.gongyan.learn.executor.JavaClassExecutor;
+import cn.gongyan.learn.utils.CommonValues;
 import org.springframework.stereotype.Service;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import javax.transaction.Transactional;
+import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -33,7 +36,8 @@ public class CodeService {
     private static final String WAIT_WARNING = "服务器忙，请稍后提交";
     private static final String NO_OUTPUT = "Nothing.";
 
-    public String execute(String source){
+    synchronized public String execute(String source){
+        //CommonValues.sysInputFileName=fileName;
         //编译结果收集器
         DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<>();
         byte[] classBytes = CustomStringJavaCompiler.compile(source, collector);
@@ -53,14 +57,16 @@ public class CodeService {
             return compileErrorRes.toString();
         }
 
+//        InputStream in=System.in;
+//        System.setIn(inputStream);
         //2.编译通过，运行main方法执行字节码
         Callable<String> runTask = new Callable<String>() {
             @Override
             public String call() throws Exception {
+                HackSystem.resetInput();
                 return JavaClassExecutor.execute(classBytes);
             }
         };
-
         Future<String> res = null;
         try {
             res = pool.submit(runTask);
@@ -79,6 +85,7 @@ public class CodeService {
         }catch (TimeoutException ex){
             runResult = "Time Limit Exceeded";
         }finally {
+            //System.setIn(in);
             res.cancel(true);
         }
 

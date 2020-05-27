@@ -52,9 +52,10 @@ public class ClassService {
      * @param studentId
      * @return
      */
-    public Integer removeStudent(String studentId){
+    public Integer removeStudent(String studentId,String classId){
         CourseStudent courseStudent = new CourseStudent();
         courseStudent.setCsStudentId(studentId);
+        courseStudent.setCsCourseId(classId);
         CourseStudent student = courseStudentRepository.findOne(Example.of(courseStudent)).orElse(null);
         courseStudentRepository.deleteById(student.getCsId());
         return 1;

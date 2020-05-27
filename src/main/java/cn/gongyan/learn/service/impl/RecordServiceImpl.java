@@ -222,6 +222,9 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public String getStudentOptions(String id) {
         ExamRecord record = examRecordRepository.findById(id).orElse(null);
+        if(record.getExamStatus().compareTo(CommonValues.examStatusBaijuan)==0){
+            return null;
+        }
         return DownLoader.download(record.getExamOptionUrl());
     }
 

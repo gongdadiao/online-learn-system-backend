@@ -268,4 +268,13 @@ public class UserServiceImpl implements UserService {
         }
         return 1;
     }
+
+    @Override
+    public Integer disableUser(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if(user==null)
+            return 0;
+        user.setUserEnable(0);
+        return 1;
+    }
 }

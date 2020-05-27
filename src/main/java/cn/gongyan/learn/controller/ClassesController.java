@@ -44,17 +44,18 @@ public class ClassesController {
     ChapterService chapterService;
 
     /**
-     * 除去学生
-     * @param id
+     *
+     * @param sid
+     * @param cid
      * @return
      */
-    @GetMapping("/student/delete/{id}")
+    @GetMapping("/student/delete")
     @ApiOperation("除去学生")
-    public ResultVO<String> deleteStudent(@PathVariable("id") String id){
+    public ResultVO<String> deleteStudent(@RequestParam("sid") String sid,@RequestParam("cid") String cid){
        // String userId = (String) request.getAttribute("user_id");
         ResultVO<String> resultVO;
         try{
-            Integer integer = classService.removeStudent(id);
+            Integer integer = classService.removeStudent(sid,cid);
             resultVO=new ResultVO<>(0,"加入成功",null);
         }catch (Exception e){
             e.printStackTrace();

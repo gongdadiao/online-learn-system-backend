@@ -29,7 +29,7 @@ public class CodeController {
     ResultVO<String> submit(@RequestBody String text){
         ResultVO<String> resultVO;
         try {
-            String s = codeService.execute(text);
+            String s = "";//codeService.execute(text);
             resultVO=new ResultVO<>(0,"运行成功",s);
         }catch (Exception e){
             resultVO=new ResultVO<>(-1,"运行失败",null);
